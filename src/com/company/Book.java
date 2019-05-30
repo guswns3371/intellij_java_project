@@ -6,11 +6,10 @@ import java.util.Scanner;
 
 public class Book {
     String book_fn;
-    final int recordSize = 65;
-    //	index=10 , bookname =30 , 대출(데출자, 반납일)=10, 예약 =10바이트 => 총 50바이트
+    final int recordSize = 75;
 //	index =3, booknanme =30, 대출여부 =1, 대출자 =6(학번), 반납날짜 =10 (date), 예약자 =6 (학번)
-    byte[] oneLine = new byte[recordSize];
     final static byte paddingChar = 0x40;
+    final static char padding= 0x40;
 
 
 
@@ -28,26 +27,26 @@ public class Book {
         Scanner in = new Scanner(System.in);
         FileOutputStream out;
         try {
-            out = new FileOutputStream(book_fn,false);
+            out = new FileOutputStream(book_fn,true);
             while(cont.compareTo("y") == 0) {
 //			index=10 , bookname =30 ,대출자=10 ,예약자 = 10바이트, 반납일=5 >>> 총 60바이트
-                writeAtoZ(in, oneRecord, bookIdx, "책 번호", 0, 10);
-                writeAtoZ(in, oneRecord, bookName,"책 이름", 10, 30);
-                writeAtoZ(in, oneRecord, bookDae, "책 대출자 이름", 40, 10);
-                writeAtoZ(in, oneRecord, bookYea, "책 예약자 이름", 50, 10);
-                writeAtoZ(in, oneRecord, bookExp, "책 반납일", 60, 5);
-                out.write(oneRecord);
+                String totalInfo =
+                writeBookInfo(in,bookIdx,"책 번호",10)+
+                writeBookInfo(in,bookName,"책 이름",30)+
+                writeBookInfo(in,bookDae,"책 대출자",10)+
+                writeBookInfo(in,bookYea,"책 예약자",10)+
+                writeBookInfo(in,bookExp,"책 반납일",10)+
+                writeBookInfo(in,bookisDae,"책 대출여부",5);
+                out.write(totalInfo.getBytes());
                 System.out.println("Continue? (y/n)");
                 cont = in.nextLine();
             }
-
             out.close();
         } catch (IOException e) {
             // TODO: handle exception
         }
 
 
-//		 in.close();
     }
 
     private static void writeAtoZ(Scanner in, byte[] oneRecord, String book, String bookStr, int from, int len) throws UnsupportedEncodingException {
@@ -55,21 +54,20 @@ public class Book {
             System.out.print(bookStr+" ("+len+"자 이내) : ");
             book = in.next();
             if (book.length()<=len) {
-                int len_t = book.getBytes().length;
-                byte[] source = new byte[len_t];
-                source = book.getBytes();
+                book = new String(book.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+                byte[] source =  book.getBytes(StandardCharsets.UTF_8);
+                System.out.println(new String(source,StandardCharsets.UTF_8));
                 for (int i = from; i < from+book.length(); i++) {
-//					oneRecord[i] = (byte) book_.getBytes()[(i-from)];
-//					oneRecord[i] = (byte) book_.charAt[(i-from)];
                     oneRecord[i] = source[(i-from)];
                 }
                 for (int i = from+book.length(); i < from+len; i++) {
                     oneRecord[i]= paddingChar;
                 }
+                System.out.println(new String(oneRecord,StandardCharsets.UTF_8));
                 byte[] b = new byte[1];
                 for (int i= from; i<from+len; i++){
                     b[0] = oneRecord[i];
-                    System.out.print(new String(b));
+                    System.out.print(new String(b,StandardCharsets.UTF_8));
                 }
                 System.out.println();
                 break;
@@ -80,27 +78,42 @@ public class Book {
         }
     }
 
+    private static String writeBookInfo(Scanner in,String book,String str,int length){
+        for (;;){
+            System.out.print(str+" ("+length+"자 이내) : ");
+            book = in.nextLine();
+            if (book.length()<=length){
+                for (int i=book.length(); i<length; i++){
+                    book += padding;
+                }
+                System.out.println(book);
+                return book;
+            }else {
+                System.out.println(str+"(이)가 "+length+"자가 넘습니다");
+            }
+        }
+    }
     void readBookInfoFile() {
 
         FileInputStream in;
         try {
             in = new FileInputStream(book_fn);
-            byte[] oneRecord = new byte[recordSize];
             int len=0,total=0;
-            for (;;){
-                len = in.read(oneRecord);
-                if (len == -1)
-                    break;
-                total += len;
-            }
-            in.close();
-
-            in = new FileInputStream(book_fn);
+            total = in.available();
+//            byte[] oneRecord = new byte[recordSize];
+//            for (;;){
+//                len = in.read(oneRecord);
+//                if (len == -1)
+//                    break;
+//                total += len;
+//            }
+//            in.close();
+//
+//            in = new FileInputStream(book_fn);
             byte[] newrecord = new byte[total];
             String[] booklist = new String[total/recordSize];
             in.read(newrecord);
             String str = new String(newrecord, StandardCharsets.UTF_8);
-            System.out.println(str);
             StringBuilder s= new StringBuilder();
             int a=0;
             for (int i =0; i<str.length(); i++){
@@ -113,13 +126,14 @@ public class Book {
             }
             System.out.println(
                     "책 번호   "+" | "+
-                            "책 제목                       "+" | "+
+                            "책 제목                          "+" | "+
                             "대출자    "+" | "+
                             "예약자    "+" | "+
-                            "반납일"+"| "
+                            "반납일    "+"| "+
+                            "대출여부"+"|"
             );
             for (String str2: booklist) {
-                String idx="",name="",dae="",yea="",exp="";
+                String idx="",name="",dae="",yea="",exp="",isDae="";
                 for (int i=0;i<str2.length(); i++){
                     String A = Character.toString(str2.charAt(i));
                     if (A.equals("@"))
@@ -132,15 +146,18 @@ public class Book {
                         dae += A;
                     if (i>=50 && i<60)
                         yea += A;
-                    if (i>=60 && i<65)
+                    if (i>=60 && i<70)
                         exp += A;
+                    if (i>=70 && i<75)
+                        isDae += A;
                 }
                 System.out.println(
                         idx+" | "+
                                 name+" | "+
                                 dae+" | "+
                                 yea+" | "+
-                                exp+" | "
+                                exp+" | "+
+                                isDae+" | "
                 );
             }
 
