@@ -25,23 +25,31 @@ public class Book {
         String bookIdx = "",bookName="",bookDae="",bookYea="",bookExp="",bookisDae="";
         byte[] oneRecord = new byte[recordSize];
         Scanner in = new Scanner(System.in);
-        FileOutputStream out;
+        FileOutputStream fout;
+        FileInputStream fin;
         try {
-            out = new FileOutputStream(book_fn,true);
+            fin = new FileInputStream(book_fn);
+            int len = fin.available();
+            len = (len/recordSize)+1;
+            fin.close();
+
+            fout = new FileOutputStream(book_fn,true);
             while(cont.compareTo("y") == 0) {
 //			index=10 , bookname =30 ,대출자=10 ,예약자 = 10바이트, 반납일=5 >>> 총 60바이트
                 String totalInfo =
-                writeBookInfo(in,bookIdx,"책 번호",10)+
-                writeBookInfo(in,bookName,"책 이름",30)+
-                writeBookInfo(in,bookDae,"책 대출자",10)+
-                writeBookInfo(in,bookYea,"책 예약자",10)+
-                writeBookInfo(in,bookExp,"책 반납일",10)+
-                writeBookInfo(in,bookisDae,"책 대출여부",5);
-                out.write(totalInfo.getBytes());
+                writeBookInfo(in,Integer.toString(len),"책 번호",10)+
+                writeBookInfo(in,"","책 이름",30)+
+                writeBookInfo(in,"","책 대출자",10)+
+                writeBookInfo(in,"","책 예약자",10)+
+                writeBookInfo(in,"","책 반납일",10)+
+                writeBookInfo(in,"","책 대출여부",5);
+                fout.write(totalInfo.getBytes());
                 System.out.println("Continue? (y/n)");
                 cont = in.nextLine();
             }
-            out.close();
+            fout.close();
+        } catch (FileNotFoundException e) {
+            // TODO: handle exception
         } catch (IOException e) {
             // TODO: handle exception
         }
@@ -78,10 +86,16 @@ public class Book {
         }
     }
 
-    private static String writeBookInfo(Scanner in,String book,String str,int length){
+    private static String writeBookInfo(Scanner in,String s,String str,int length){
         for (;;){
-            System.out.print(str+" ("+length+"자 이내) : ");
-            book = in.nextLine();
+            String book;
+            if (!str.equals("책 번호")){
+                System.out.print(str+" ("+length+"자 이내) : ");
+                book = in.nextLine();
+            }else {
+                book = s;
+            }
+
             if (book.length()<=length){
                 for (int i=book.length(); i<length; i++){
                     book += padding;
@@ -98,7 +112,7 @@ public class Book {
         FileInputStream in;
         try {
             in = new FileInputStream(book_fn);
-            int len=0,total=0;
+            int total=0;
             total = in.available();
 //            byte[] oneRecord = new byte[recordSize];
 //            for (;;){
@@ -175,13 +189,24 @@ public class Book {
         RandomAccessFile acc;
         try {
             acc= new RandomAccessFile(book_fn,"rw");
-            int seekSize = 65;
-            String inline ="";
-            while ((inline = acc.readLine()) !=null){
-                System.out.println(inline);
+            byte[] data = new byte[(int)acc.length()];
+            String[] datalist = new String[(int)acc.length()/recordSize];
+            acc.read(data);
+            String dataStr = new String(data,StandardCharsets.UTF_8);
+            StringBuilder s= new StringBuilder();
+            int a=0;
+            for (int i =0; i<dataStr.length(); i++){
+                s.append(dataStr.charAt(i));
+                if ((i+1) % recordSize == 0){
+                    datalist[a] = s.toString();
+                    s = new StringBuilder();
+                    a++;
+                }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            for (String one: datalist) {
+                System.out.println(one);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
