@@ -4,16 +4,14 @@ package com.company;
 public class Faculty extends User{
 
     String major;
-    Faculty(int age, String name,String major) {
-        super(age, name);
+    public Faculty(String name, String major) {
+        super(name);
         this.major = major;
-
         super.Max_books = 10;
-        // TODO Auto-generated constructor stub
     }
 
     void intro() {
-        System.out.print(name+" ("+age+"/ 교직원) : ");
+        System.out.print(name+" (교직원) : ");
     }
 
     void 대출연장() {

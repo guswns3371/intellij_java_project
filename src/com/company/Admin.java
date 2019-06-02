@@ -4,13 +4,13 @@ package com.company;
 public class Admin extends Person{
 
 
-    Admin(int age, String name) {
-        super(age, name);
+    public Admin(String name) {
+        super(name);
         // TODO Auto-generated constructor stub
     }
 
     void intro() {
-        System.out.print(name+" ("+age+"/ 관리자) : ");
+        System.out.print(name+" (관리자) : ");
     }
 
     void 대출제제여부() {

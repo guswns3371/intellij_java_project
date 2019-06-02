@@ -1,33 +1,19 @@
-package com.company;
+package library;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
-    static Scanner input = new Scanner(System.in);
-    static BookInfo[] booklist = {
-            new BookInfo(0,"방에관한 기억", "서성란", 5),
-            new BookInfo(1,"파프리카", "서성란", 3),
-            new BookInfo(2,"어린 왕자", "쌩땍쥐뼤리", 10),
-            new BookInfo(3,"자바전쟁", "생활토딩", 4),
-            new BookInfo(4,"PHP 뿌쉬기", "마크 주커버그", 7),
-            new BookInfo(5,"아홉살 인생", "하현준", 2),
-            new BookInfo(6,"하이탑", "서보인", 6),
-            new BookInfo(7,"이산수학", "박두순", 11),
-            new BookInfo(8,"오베라는 남자", "프레드릭 배크만", 3),
-            new BookInfo(9,"연금술사", "파울로 코엘료", 5),
-            new BookInfo(10,"숨", "테드 창", 3),
-            new BookInfo(11,"살인 카드 게임", "제임스 패터슨", 6),
-            new BookInfo(12,"고양이 1", "베르나르 베르베르", 9),
-            new BookInfo(13,"편지", "히가시노 게이고", 2),
-            new BookInfo(14,"흐린 길","윤덕원",4)
-    };
+    static Scanner input;
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
+        input = new Scanner(System.in);
+        LibrarySystem librarySystem = new LibrarySystem();
+//        Student student = new Student("하현준","15109379");
+//        Faculty faculty = new Faculty("김상훤","19890321");
+//        Admin admin = new Admin("이수영","2580");
 
-        int user_menu_num,admin_menu_num,age;
-        String name,major;
+        int user_menu_num,admin_menu_num;
+        String name,passwd;
         Student student = null;
         Faculty faculty = null;
         Admin admin = null;
@@ -42,23 +28,17 @@ public class Main {
                     case 1:
                         System.out.print("이름을 입력하세요 : ");
                         name = input.next();
-//                        System.out.print("나이를 입력하세요 : ");
-//                        age = input.nextInt();
-                        System.out.print("학과를 입력하세요 : ");
-                        major = input.next();
-                        System.out.print("학번을 입력하세요 : ");
-                        String stu_num = input.next();
-                        student = new Student(name, stu_num, major);
+                        System.out.print("비밀번호를 입력하세요 : ");
+                        passwd = input.next();
+                        student = new Student(name, passwd);
 
                         break;
                     case 2:
                         System.out.print("이름을 입력하세요 : ");
                         name = input.next();
-//                        System.out.print("나이를 입력하세요 : ");
-//                        age = input.nextInt();
-                        System.out.print("담당 학과를 입력하세요 : ");
-                        major = input.next();
-                        faculty = new Faculty( name, major);
+                        System.out.print("비밀번호를 입력하세요 : ");
+                        passwd = input.next();
+                        faculty = new Faculty( name, passwd);
                         break;
 
                 }
@@ -82,17 +62,18 @@ public class Main {
             case 2:
                 System.out.print("이름을 입력하세요 : ");
                 name = input.next();
-                admin = new Admin( name);
+                System.out.print("비밀번호를 입력하세요 : ");
+                passwd = input.next();
+                admin = new Admin(name,passwd);
 
                 for(;;) {
                     admin_menu_num = admin_menu();
-
-                    admin_act(admin, admin_menu_num);
-
-                    if (admin_menu_num==4) {
+                    if (admin_menu_num==5) {
                         break;
-                    }else if (admin_menu_num>4 || admin_menu_num <1) {
+                    }else if (admin_menu_num>5 || admin_menu_num <1) {
                         System.out.println("입력값 오류");
+                    }else {
+                        admin_act(admin, admin_menu_num);
                     }
                 }
                 break;
@@ -102,6 +83,7 @@ public class Main {
         }
 
         input.close();
+
     }
 
     static int user_menu() {
@@ -125,47 +107,35 @@ public class Main {
 
     static int admin_menu() {
         System.out.println("*********************");
-        System.out.println("      1.도서정보 입력                   ");
-        System.out.println("      2.도소 정보 정리 (삭제)   ");
-        System.out.println("      3.미반납자 확인             ");
-        System.out.println("      4.exit         ");
+        System.out.println("      1.도서 정보 입력                ");
+        System.out.println("      2.도서 정보 수정    ");
+        System.out.println("      3.도서 정보 삭제 .   ");
+        System.out.println("      4.도서 정보 출력             ");
+        System.out.println("      5.exit         ");
         System.out.println("*********************");
-
         System.out.print("input menu number : ");
         int num = input.nextInt();
 
         return num;
     }
 
-    static void display_booklist() {
-        System.out.println("*********************");
-        for(BookInfo b : booklist) {
-            b.책정보();
-        }
-        System.out.println("*********************");
-
-    }
     static void student_act(Student student, int user_menu_num) {
-        int book_idx;
         switch (user_menu_num) {
             case 1:
-                book_idx = student.대출시도();
-                student.대출가능성(booklist[book_idx].책_대출가능성());
-                student.display_info();
-
+                System.out.print("대출할 책의 번호를 입력하세요 : ");
+                student.대출(input.nextInt());
                 break;
             case 2:
-                book_idx = student.반납시도();
-                student.반납가능성(booklist[book_idx].책_반납가능성());
-                student.display_info();
-
+                System.out.print("반납할 책의 번호를 입력하세요 : ");
+                student.반납(input.nextInt());
                 break;
             case 3:
-                student.조회시도();
-                display_booklist();
+                System.out.print("조회할 책의 번호를 입력하세요 : ");
+                student.조회(input.nextInt());
                 break;
             case 4:
-                student.예약시도();
+                System.out.print("예약할 책의 번호를 입력하세요 : ");
+                student.예약(input.nextInt());
                 break;
             case 5:
                 student.나가기();
@@ -177,24 +147,22 @@ public class Main {
     }
 
     static void faculty_act(Faculty faculty, int user_menu_num ) {
-        int book_idx;
         switch (user_menu_num) {
             case 1:
-                book_idx = faculty.대출시도();
-                faculty.대출가능성(booklist[book_idx].책_대출가능성());
-                faculty.display_info();
+                System.out.print("대출할 책의 번호를 입력하세요 : ");
+                faculty.대출(input.nextInt());
                 break;
             case 2:
-                book_idx = faculty.반납시도();
-                faculty.반납가능성(booklist[book_idx].책_반납가능성());
-                faculty.display_info();
+                System.out.print("반납할 책의 번호를 입력하세요 : ");
+                faculty.반납(input.nextInt());
                 break;
             case 3:
-                faculty.조회시도();
-                display_booklist();
+                System.out.print("조회할 책의 번호를 입력하세요 : ");
+                faculty.조회(input.nextInt());
                 break;
             case 4:
-                faculty.예약시도();
+                System.out.print("예약할 책의 번호를 입력하세요 : ");
+                faculty.예약(input.nextInt());
                 break;
             case 5:
                 faculty.나가기();
@@ -208,19 +176,36 @@ public class Main {
     static void admin_act(Admin admin, int admin_menu_num) {
         switch (admin_menu_num) {
             case 1:
-                admin.대출처리();
+                admin.도서정보입력();
                 break;
             case 2:
-                admin.반납처리();
+                admin.도서정보수정();
                 break;
             case 3:
-                admin.사용자_배열정보();
                 break;
             case 4:
+                admin.도서정보출력();
+                break;
+            case 5:
                 admin.나가기();
                 break;
             default:
                 System.out.println("error");
+                break;
+        }
+    }
+
+    static void system_act(LibrarySystem system, int menu_num){
+        switch (menu_num){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            default:
                 break;
         }
     }

@@ -7,8 +7,8 @@ public class User extends Person{
     int Max_books=0,unReturn_books=0,using_days=0;
     boolean isBanned = false;
     Scanner input = null;
-    User(int age, String name) {
-        super(age, name);
+    User(String name) {
+        super(name);
         // TODO Auto-generated constructor stub
     }
 
