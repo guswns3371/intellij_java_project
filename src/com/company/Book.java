@@ -33,17 +33,19 @@ public class Book {
             len = (len/recordSize)+1;
             fin.close();
 
-            fout = new FileOutputStream(book_fn,true);
+            fout = new FileOutputStream(book_fn);
+            int a=0;
             while(cont.compareTo("y") == 0) {
 //			index=10 , bookname =30 ,대출자=10 ,예약자 = 10바이트, 반납일=5 >>> 총 60바이트
                 String totalInfo =
-                writeBookInfo(in,Integer.toString(len),"책 번호",10)+
+                writeBookInfo(in,Integer.toString(len+a),"책 번호",10)+
                 writeBookInfo(in,"","책 이름",30)+
                 writeBookInfo(in,"","책 대출자",10)+
                 writeBookInfo(in,"","책 예약자",10)+
                 writeBookInfo(in,"","책 반납일",10)+
                 writeBookInfo(in,"","책 대출여부",5);
                 fout.write(totalInfo.getBytes());
+                a++;
                 System.out.println("Continue? (y/n)");
                 cont = in.nextLine();
             }
@@ -107,6 +109,19 @@ public class Book {
             }
         }
     }
+
+    private static String writeAtoB(String str,int length){
+        if (str.length()<=length){
+            for (int i=str.length(); i<length; i++){
+                str += "&";
+            }
+            System.out.println(str);
+            return str;
+        }else {
+            System.out.println(str+"(이)가 "+length+"자가 넘습니다");
+            return null;
+        }
+    }
     void readBookInfoFile() {
 
         FileInputStream in;
@@ -114,16 +129,6 @@ public class Book {
             in = new FileInputStream(book_fn);
             int total=0;
             total = in.available();
-//            byte[] oneRecord = new byte[recordSize];
-//            for (;;){
-//                len = in.read(oneRecord);
-//                if (len == -1)
-//                    break;
-//                total += len;
-//            }
-//            in.close();
-//
-//            in = new FileInputStream(book_fn);
             byte[] newrecord = new byte[total];
             String[] booklist = new String[total/recordSize];
             in.read(newrecord);
@@ -194,6 +199,7 @@ public class Book {
             acc.read(data);
             String dataStr = new String(data,StandardCharsets.UTF_8);
             StringBuilder s= new StringBuilder();
+
             int a=0;
             for (int i =0; i<dataStr.length(); i++){
                 s.append(dataStr.charAt(i));
@@ -206,6 +212,15 @@ public class Book {
             for (String one: datalist) {
                 System.out.println(one);
             }
+
+            acc.close();
+            /***/
+            acc= new RandomAccessFile(book_fn,"rw");
+            String idx="",name="",dae="",yea="",exp="",isDae="";
+            idx =writeAtoB("1234567890",30);
+            acc.seek(10);
+            acc.write(idx.getBytes());
+            acc.close();
 
         } catch (IOException e) {
             e.printStackTrace();
