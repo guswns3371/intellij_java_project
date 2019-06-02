@@ -18,46 +18,6 @@ public class LibrarySystem {
         this.person_fn = "person.bin";
     }
 
-    void inputBookInfo() {
-//		도서정보 입력
-        String cont = "y";
-        String bookIdx = "",bookName="",bookDae="",bookYea="",bookExp="",bookisDae="";
-        byte[] oneRecord = new byte[recordSize];
-        Scanner input = new Scanner(System.in);
-        FileOutputStream fout;
-        FileInputStream fin;
-        try {
-            fin = new FileInputStream(book_fn);
-            int len = fin.available();
-            len = (len/recordSize)+1;
-            fin.close();
-
-            fout = new FileOutputStream(book_fn);
-            int a=0;
-            while(cont.compareTo("y") == 0) {
-//			index=10 , bookname =30 ,대출자=10 ,예약자 = 10바이트, 반납일=5 >>> 총 60바이트
-                String totalInfo =
-                        writeBookInfo(input,Integer.toString(len+a),"책 번호",10)+
-                                writeBookInfo(input,"","책 이름",30)+
-                                writeBookInfo(input,"","책 대출자",10)+
-                                writeBookInfo(input,"","책 예약자",10)+
-                                writeBookInfo(input,"","책 반납일",10)+
-                                writeBookInfo(input,"","책 대출여부",5);
-                fout.write(totalInfo.getBytes());
-                a++;
-                System.out.println("Continue? (y/n)");
-                cont = input.nextLine();
-            }
-            fout.close();
-        } catch (FileNotFoundException e) {
-            // TODO: handle exception
-        } catch (IOException e) {
-            // TODO: handle exception
-        }
-
-
-    }
-
     void 도서정보출력() {
 
         FileInputStream in;
@@ -126,42 +86,262 @@ public class LibrarySystem {
         }
     }
 
-    void editBookInfoFile() {
-        RandomAccessFile acc;
-        try {
-            acc= new RandomAccessFile(book_fn,"rw");
-            byte[] data = new byte[(int)acc.length()];
-            String[] datalist = new String[(int)acc.length()/recordSize];
-            acc.read(data);
-            String dataStr = new String(data,StandardCharsets.UTF_8);
-            StringBuilder s= new StringBuilder();
+    void 대출관리(int book_idx,String name){
+        if (대출가능여부판단(book_idx)){
 
+        }
+    }
+    void 반납관리(int book_idx,String name){
+        if (반납가능여부판단(book_idx)){
+
+        }
+    }
+    void 예약관리(int book_idx,String name){
+        if (예약가능여부판단(book_idx)){
+
+        }
+    }
+    void 조회관리(int book_idx,String name){
+        if (조회가능여부판단(book_idx)){
+
+        }
+    }
+
+    //책 입장에서
+    //유저의 최대 대출권수의 의미가 없는 코드
+    private boolean 대출가능여부판단(int book_idx){
+        return check(book_idx,1);
+    }
+    private boolean 반납가능여부판단(int book_idx){
+        return check(book_idx,2);
+    }
+    private boolean 예약가능여부판단(int book_idx){
+        return check(book_idx,3);
+    }
+    private boolean 조회가능여부판단(int book_idx){
+        return check(book_idx,4);
+    }
+
+
+    private boolean check(int book_idx,int isOk_of_what){
+        boolean isOk = false;
+        switch (isOk_of_what){
+            case 1://대출
+                isOk = searchFromBookFile(book_idx,isOk_of_what);
+                if (!isOk)
+                    System.out.println("!! 대출 불가능 !!");
+                else
+                    System.out.println("!! 대출 가능 !!");
+                break;
+            case 2://반납
+                isOk = searchFromBookFile(book_idx,isOk_of_what);
+                if (!isOk)
+                    System.out.println("!! 반납 불가능 !!");
+                else
+                    System.out.println("!! 반납 가능 !!");
+                break;
+            case 3://예약
+                isOk = searchFromBookFile(book_idx,isOk_of_what);
+                if (!isOk)
+                    System.out.println("!! 예약 불가능 !!");
+                else
+                    System.out.println("!! 예약 가능 !!");
+                break;
+            case 4://조회
+                isOk = searchFromBookFile(book_idx,isOk_of_what);
+                if (!isOk)
+                    System.out.println("!! 조회 불가능 !!");
+                else
+                    System.out.println("!! 조회 가능 !!");
+                break;
+        }
+        return  isOk;
+    }
+
+    private boolean searchFromBookFile(int book_idx,int isOk_of_what){
+        boolean isOk= false;
+
+        FileInputStream in;
+        try {
+            in = new FileInputStream(book_fn);
+            int total=0;
+            total = in.available();
+            byte[] newrecord = new byte[total];
+            String[] booklist = new String[total/recordSize];
+            in.read(newrecord);
+            String str = new String(newrecord, StandardCharsets.UTF_8);
+            StringBuilder s= new StringBuilder();
             int a=0;
-            for (int i =0; i<dataStr.length(); i++){
-                s.append(dataStr.charAt(i));
+            for (int i =0; i<str.length(); i++){
+                s.append(str.charAt(i));
                 if ((i+1) % recordSize == 0){
-                    datalist[a] = s.toString();
+                    booklist[a] = s.toString();
                     s = new StringBuilder();
                     a++;
                 }
             }
-            for (String one: datalist) {
-                System.out.println(one);
+
+            for (String str2: booklist) {
+                String idx="",name="",dae="",yea="",exp="",isDae="";
+                for (int i=0;i<str2.length(); i++){
+                    String A = Character.toString(str2.charAt(i));
+                    if (A.equals("@"))
+                        A="";
+                    if (i < 10)
+                        idx += A;
+                    if (i>=10 && i<40)
+                        name += A;
+                    if (i>=40 && i<50)
+                        dae += A;
+                    if (i>=50 && i<60)
+                        yea += A;
+                    if (i>=60 && i<70)
+                        exp += A;
+                    if (i>=70 && i<75)
+                        isDae += A;
+                }
+
+                if (idx.equals(Integer.toString(book_idx))){
+                    System.out.println(
+                            "책 번호"+" | "+
+                                    "책 제목                 "+" | "+
+                                    "대출자"+" | "+
+                                    "예약자"+" | "+
+                                    "반납일"+"| "+
+                                    "대출여부"+"|"
+                    );System.out.println(
+                            idx+" | "+
+                                    name+" | "+
+                                    dae+" | "+
+                                    yea+" | "+
+                                    exp+" | "+
+                                    isDae+" | "
+                    );
+                    switch (isOk_of_what){
+                        case 1://대출
+                            if (dae.equals("") || isDae.equals("0")){
+                                isOk = true;
+                            }else {
+                                System.out.print("대출자 : "+dae+", 대출여부 : "+isDae+" ==> ");
+                                isOk = false;
+                            }
+                            break;
+                        case 2://반납
+                            if (dae.equals("") || isDae.equals("0")){
+                                isOk = false;
+                            }else {
+//                                System.out.print("반납일"+exp+", 대출자 : "+dae+", 대출여부 : "+isDae+" ==> ");
+                                isOk = true;
+                            }
+                            break;
+                        case 3://예약
+                            if (yea.equals("")){
+                                isOk = true;
+                            }else{
+                                System.out.print("예약자 : "+yea+" ==> ");
+                                isOk = false;
+                            }
+                            break;
+                        case 4://조회
+                            isOk = true;
+                            break;
+                    }
+                }
             }
 
-            acc.close();
-            /***/
-            acc= new RandomAccessFile(book_fn,"rw");
-            String idx="",name="",dae="",yea="",exp="",isDae="";
-            idx =writeAtoB("1234567890",30);
-            acc.seek(10);
-            acc.write(idx.getBytes());
-            acc.close();
 
-        } catch (IOException e) {
+            in.close();
+
+        } catch (FileNotFoundException e){
+            System.out.println(book_fn+"파일이 없습니다.1");
+            isOk = false;
+        }catch (IOException e) {
+            System.out.println(book_fn+"파일이 없습니다.2");
+            isOk = false;
             e.printStackTrace();
         }
+        return isOk;
+    }
+    private boolean 반납하기(int book_idx,String userName){
+        boolean isOk= false;
 
+        FileInputStream in;
+        try {
+            in = new FileInputStream(book_fn);
+            int total=0;
+            total = in.available();
+            byte[] newrecord = new byte[total];
+            String[] booklist = new String[total/recordSize];
+            in.read(newrecord);
+            String str = new String(newrecord, StandardCharsets.UTF_8);
+            StringBuilder s= new StringBuilder();
+            int a=0;
+            for (int i =0; i<str.length(); i++){
+                s.append(str.charAt(i));
+                if ((i+1) % recordSize == 0){
+                    booklist[a] = s.toString();
+                    s = new StringBuilder();
+                    a++;
+                }
+            }
+
+            for (String str2: booklist) {
+                String idx="",name="",dae="",yea="",exp="",isDae="";
+                for (int i=0;i<str2.length(); i++){
+                    String A = Character.toString(str2.charAt(i));
+                    if (A.equals("@"))
+                        A="";
+                    if (i < 10)
+                        idx += A;
+                    if (i>=10 && i<40)
+                        name += A;
+                    if (i>=40 && i<50)
+                        dae += A;
+                    if (i>=50 && i<60)
+                        yea += A;
+                    if (i>=60 && i<70)
+                        exp += A;
+                    if (i>=70 && i<75)
+                        isDae += A;
+                }
+
+                if (idx.equals(Integer.toString(book_idx))){
+                    System.out.println(
+                            "책 번호"+" | "+
+                                    "책 제목                 "+" | "+
+                                    "대출자"+" | "+
+                                    "예약자"+" | "+
+                                    "반납일"+"| "+
+                                    "대출여부"+"|"
+                    );System.out.println(
+                            idx+" | "+
+                                    name+" | "+
+                                    dae+" | "+
+                                    yea+" | "+
+                                    exp+" | "+
+                                    isDae+" | "
+                    );
+                            if (dae.equals("") || isDae.equals("0")){
+                                isOk = false;
+                            }else {
+                                System.out.print("반납일"+exp+", 대출자 : "+dae+", 대출여부 : "+isDae+" ==> ");
+                                isOk = true;
+                            }
+                }
+            }
+
+
+            in.close();
+
+        } catch (FileNotFoundException e){
+            System.out.println(book_fn+"파일이 없습니다.1");
+            isOk = false;
+        }catch (IOException e) {
+            System.out.println(book_fn+"파일이 없습니다.2");
+            isOk = false;
+            e.printStackTrace();
+        }
+        return isOk;
     }
 
     private static String writeBookInfo(Scanner input, String s,String str,int length){
@@ -198,4 +378,5 @@ public class LibrarySystem {
             return null;
         }
     }
+
 }

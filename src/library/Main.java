@@ -5,9 +5,10 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner input;
+    static LibrarySystem librarySystem ;
     public static void main(String[] args) {
         input = new Scanner(System.in);
-        LibrarySystem librarySystem = new LibrarySystem();
+        librarySystem = new LibrarySystem();
 //        Student student = new Student("하현준","15109379");
 //        Faculty faculty = new Faculty("김상훤","19890321");
 //        Admin admin = new Admin("이수영","2580");
@@ -18,7 +19,7 @@ public class Main {
         Faculty faculty = null;
         Admin admin = null;
 
-        System.out.print("사용자 ==> 1\n관리자 ==> 2\n사용자 정보 파일관리 ==> 3\n도서정보 파일관리 ==> 4 \n종료 ==> 5 : ");
+        System.out.print("사용자 ==> 1\n관리자 ==> 2\n종료 ==> 3 : ");
         int who = input.nextInt();
         switch (who) {
             case 1:
@@ -44,17 +45,16 @@ public class Main {
                 }
                 for(;;) {
                     user_menu_num = user_menu();
-
-                    if (student == null) {
-                        faculty_act(faculty, user_menu_num);
-                    }else if (student != null) {
-                        student_act(student, user_menu_num);
-                    }
-
                     if (user_menu_num==5) {
                         break;
                     }else if (user_menu_num>5 || user_menu_num <1) {
                         System.out.println("입력값 오류");
+                    }else {
+                        if (student == null) {
+                            faculty_act(faculty, user_menu_num);
+                        }else {
+                            student_act(student, user_menu_num);
+                        }
                     }
                 }
                 break;
@@ -77,13 +77,11 @@ public class Main {
                     }
                 }
                 break;
-            case 5:
+            case 3:
                 System.out.println("종료하였습니다.");
                 break;
         }
-
         input.close();
-
     }
 
     static int user_menu() {
@@ -120,55 +118,71 @@ public class Main {
     }
 
     static void student_act(Student student, int user_menu_num) {
+        int num;
+        librarySystem.도서정보출력();
         switch (user_menu_num) {
+            case 0:
+                break;
             case 1:
-                System.out.print("대출할 책의 번호를 입력하세요 : ");
-                student.대출(input.nextInt());
+                System.out.print("      대출할 책의 번호를 입력하세요 : ");
+                num = student.대출(input.nextInt());
+                librarySystem.대출관리(num,student.getName());
                 break;
             case 2:
-                System.out.print("반납할 책의 번호를 입력하세요 : ");
-                student.반납(input.nextInt());
+                System.out.print("      반납할 책의 번호를 입력하세요 : ");
+                num = student.반납(input.nextInt());
+                librarySystem.반납관리(num,student.getName());
                 break;
             case 3:
-                System.out.print("조회할 책의 번호를 입력하세요 : ");
-                student.조회(input.nextInt());
+                System.out.print("      조회할 책의 번호를 입력하세요 : ");
+                num = student.조회(input.nextInt());
+                librarySystem.조회관리(num,student.getName());
                 break;
             case 4:
-                System.out.print("예약할 책의 번호를 입력하세요 : ");
-                student.예약(input.nextInt());
+                System.out.print("      예약할 책의 번호를 입력하세요 : ");
+                num = student.예약(input.nextInt());
+                librarySystem.예약관리(num,student.getName());
                 break;
             case 5:
                 student.나가기();
                 break;
             default:
-                System.out.println("error");
+                System.out.println("        error");
                 break;
         }
     }
 
     static void faculty_act(Faculty faculty, int user_menu_num ) {
+        int num;
+        librarySystem.도서정보출력();
         switch (user_menu_num) {
+            case 0:
+                break;
             case 1:
-                System.out.print("대출할 책의 번호를 입력하세요 : ");
-                faculty.대출(input.nextInt());
+                System.out.print("      대출할 책의 번호를 입력하세요 : ");
+                num = faculty.대출(input.nextInt());
+                librarySystem.대출관리(num,faculty.getName());
                 break;
             case 2:
-                System.out.print("반납할 책의 번호를 입력하세요 : ");
-                faculty.반납(input.nextInt());
+                System.out.print("      반납할 책의 번호를 입력하세요 : ");
+                num = faculty.반납(input.nextInt());
+                librarySystem.반납관리(num,faculty.getName());
                 break;
             case 3:
-                System.out.print("조회할 책의 번호를 입력하세요 : ");
-                faculty.조회(input.nextInt());
+                System.out.print("      조회할 책의 번호를 입력하세요 : ");
+                num = faculty.조회(input.nextInt());
+                librarySystem.조회관리(num,faculty.getName());
                 break;
             case 4:
-                System.out.print("예약할 책의 번호를 입력하세요 : ");
-                faculty.예약(input.nextInt());
+                System.out.print("      예약할 책의 번호를 입력하세요 : ");
+                num = faculty.예약(input.nextInt());
+                librarySystem.예약관리(num,faculty.getName());
                 break;
             case 5:
                 faculty.나가기();
                 break;
             default:
-                System.out.println("error");
+                System.out.println("        error");
                 break;
         }
     }
@@ -182,6 +196,7 @@ public class Main {
                 admin.도서정보수정();
                 break;
             case 3:
+                admin.도서정보삭제();
                 break;
             case 4:
                 admin.도서정보출력();

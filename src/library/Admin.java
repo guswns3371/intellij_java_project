@@ -15,7 +15,7 @@ public class Admin extends Person {
 
     private String book_fn,person_fn;
 
-    public Admin(String name, String passwd) {
+     Admin(String name, String passwd) {
         super(name, passwd);
         super.setWho("관리자");
         this.book_fn = "book.bin";
@@ -50,7 +50,6 @@ public class Admin extends Person {
                 writeBookInfo(input,"","책 예약자",10)+
                 writeBookInfo(input,"","책 반납일",10)+
                 writeBookInfo(input,"","책 대출여부",5);
-
                 fout.write(totalInfo.getBytes());
                 a++;
                 System.out.println("Continue? (y/n)");
@@ -67,6 +66,7 @@ public class Admin extends Person {
     }
 
     void 도서정보수정() {
+        도서정보출력();
         RandomAccessFile acc;
         try {
             acc= new RandomAccessFile(book_fn,"rw");
@@ -101,6 +101,10 @@ public class Admin extends Person {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    void 도서정보삭제(){
 
     }
 
