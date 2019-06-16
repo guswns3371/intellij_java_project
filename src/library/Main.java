@@ -188,6 +188,7 @@ public class Main {
     }
 
     static void admin_act(Admin admin, int admin_menu_num) {
+        librarySystem.도서정보출력();
         switch (admin_menu_num) {
             case 1:
                 admin.도서정보입력();

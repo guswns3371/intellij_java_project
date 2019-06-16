@@ -31,7 +31,7 @@ public class Admin extends Person{
         System.out.println("반납 처리");
     }
 
-//	public boolean 책_대출가능성(Book book) {
+//	public boolean 책_대출가능성(BookInfo book) {
 //		boolean b = false;
 //		intro();
 //		if (book.num> book.occupied_num) {
@@ -47,7 +47,7 @@ public class Admin extends Person{
 //		return b;
 //	}
 //
-//	public boolean 책_반납가능성(Book book) {
+//	public boolean 책_반납가능성(BookInfo book) {
 //		boolean b = false;
 //		intro();
 //		if (book.occupied_num>0) {

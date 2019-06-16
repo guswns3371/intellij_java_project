@@ -24,9 +24,6 @@ public class Admin extends Person {
 
 
     void 도서정보입력() {
-        도서정보출력();
-
-//		도서정보 입력
         String cont = "y";
         String bookIdx = "",bookName="",bookDae="",bookYea="",bookExp="",bookisDae="";
         byte[] oneRecord = new byte[recordSize];
@@ -66,7 +63,6 @@ public class Admin extends Person {
     }
 
     void 도서정보수정() {
-        도서정보출력();
         RandomAccessFile acc;
         try {
             acc= new RandomAccessFile(book_fn,"rw");

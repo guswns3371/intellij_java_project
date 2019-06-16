@@ -1,8 +1,5 @@
 package library;
 
-import library.MEnum;
-import library.Person;
-
 public class User extends Person {
 
     int Max_books;

@@ -108,7 +108,7 @@ public class LibrarySystem {
     }
 
     //책 입장에서
-    //유저의 최대 대출권수의 의미가 없는 코드
+    //유저의 최대 대출 권수와 무관한 메서드
     private boolean 대출가능여부판단(int book_idx){
         return check(book_idx,1);
     }
@@ -246,87 +246,6 @@ public class LibrarySystem {
                             isOk = true;
                             break;
                     }
-                }
-            }
-
-
-            in.close();
-
-        } catch (FileNotFoundException e){
-            System.out.println(book_fn+"파일이 없습니다.1");
-            isOk = false;
-        }catch (IOException e) {
-            System.out.println(book_fn+"파일이 없습니다.2");
-            isOk = false;
-            e.printStackTrace();
-        }
-        return isOk;
-    }
-    private boolean 반납하기(int book_idx,String userName){
-        boolean isOk= false;
-
-        FileInputStream in;
-        try {
-            in = new FileInputStream(book_fn);
-            int total=0;
-            total = in.available();
-            byte[] newrecord = new byte[total];
-            String[] booklist = new String[total/recordSize];
-            in.read(newrecord);
-            String str = new String(newrecord, StandardCharsets.UTF_8);
-            StringBuilder s= new StringBuilder();
-            int a=0;
-            for (int i =0; i<str.length(); i++){
-                s.append(str.charAt(i));
-                if ((i+1) % recordSize == 0){
-                    booklist[a] = s.toString();
-                    s = new StringBuilder();
-                    a++;
-                }
-            }
-
-            for (String str2: booklist) {
-                String idx="",name="",dae="",yea="",exp="",isDae="";
-                for (int i=0;i<str2.length(); i++){
-                    String A = Character.toString(str2.charAt(i));
-                    if (A.equals("@"))
-                        A="";
-                    if (i < 10)
-                        idx += A;
-                    if (i>=10 && i<40)
-                        name += A;
-                    if (i>=40 && i<50)
-                        dae += A;
-                    if (i>=50 && i<60)
-                        yea += A;
-                    if (i>=60 && i<70)
-                        exp += A;
-                    if (i>=70 && i<75)
-                        isDae += A;
-                }
-
-                if (idx.equals(Integer.toString(book_idx))){
-                    System.out.println(
-                            "책 번호"+" | "+
-                                    "책 제목                 "+" | "+
-                                    "대출자"+" | "+
-                                    "예약자"+" | "+
-                                    "반납일"+"| "+
-                                    "대출여부"+"|"
-                    );System.out.println(
-                            idx+" | "+
-                                    name+" | "+
-                                    dae+" | "+
-                                    yea+" | "+
-                                    exp+" | "+
-                                    isDae+" | "
-                    );
-                            if (dae.equals("") || isDae.equals("0")){
-                                isOk = false;
-                            }else {
-                                System.out.print("반납일"+exp+", 대출자 : "+dae+", 대출여부 : "+isDae+" ==> ");
-                                isOk = true;
-                            }
                 }
             }
 
