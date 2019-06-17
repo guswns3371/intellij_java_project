@@ -9,27 +9,45 @@ public class BookInfo {
         this.author = author;
         this.loaner = loaner;
         this.booker = booker;
-        if (loaner.equals(""))
-            this.loaner = "없음";
-        if (booker.equals(""))
-            this.booker = "없음";
     }
 
-    void displayBookInfo(){
-//        System.out.println(
-//                        "책 번호"+" | "+
-//                        "책 제목                 "+" | "+
-//                        "작가"+" | "+
-//                        "대출자"+" | "+
-//                        "예약자"+" | "
-//        );
-        System.out.println(
-                        idx+" | "+
-                        name+" | "+
-                        author+" | "+
-                        loaner+" | "+
-                        booker
-        );
+    public String getIdx() {
+        return idx;
     }
 
+    public void setIdx(String idx) {
+        this.idx = idx;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getLoaner() {
+        return loaner;
+    }
+
+    public void setLoaner(String loaner) {
+        this.loaner = loaner;
+    }
+
+    public String getBooker() {
+        return booker;
+    }
+
+    public void setBooker(String booker) {
+        this.booker = booker;
+    }
 }
