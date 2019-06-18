@@ -9,7 +9,8 @@ public class Faculty extends User {
         super.Max_books = 5;
     }
 
-    void 대출연장(){
+    void 대출한도연장(){
         intro("대출연장");
+        super.Max_books += 5;
     }
 }

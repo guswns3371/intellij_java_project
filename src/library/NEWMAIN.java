@@ -2,6 +2,7 @@ package library;
 
 import java.util.Scanner;
 
+
 public class NEWMAIN {
 
     private static Scanner input  = null;
@@ -16,7 +17,7 @@ public class NEWMAIN {
         int who = input.nextInt();
         switch (who){
             case 1:
-                user_act();
+                user_act_1();
                 break;
             case 2:
                 admin_act();
@@ -25,12 +26,11 @@ public class NEWMAIN {
                 System.out.println("종료 하였습니다.");
                 break;
         }
-
         con.disconnect();
         input.close();
     }
 
-    static void user_act(){
+    private static void user_act_1(){
         int num;
         do {
             System.out.println("1. 로그인");
@@ -51,7 +51,7 @@ public class NEWMAIN {
             }
         }while (num !=3);
     }
-    static void user_act_student(Student person){
+    private static void user_act_2(){
         int num;
         do {
             System.out.println("1. 조회 - 모든 책");
@@ -60,56 +60,53 @@ public class NEWMAIN {
             System.out.println("4. 대출");
             System.out.println("5. 반납");
             System.out.println("6. 예약");
-            System.out.println("7. 종료");
+            System.out.println("7. 대출한도연장");
+            System.out.println("8. 종료");
             System.out.println("번호 입력 : ");
             num = input.nextInt();
             switch (num){
                 case 1:
                     System.out.println("<1. 조회 - 모든 책>");
-                    bookDisplay();
+                    bookDisplay("all");
                     break;
                 case 2:
-                    System.out.println("<1. 조회 - 대출한 책>");
-                    bookDisplay();
+                    System.out.println("<2. 조회 - 대출한 책>");
+                    bookDisplay("loan");
                     break;
                 case 3:
-                    System.out.println("<1. 조회 - 예약한 책>");
-                    bookDisplay();
+                    System.out.println("<3. 조회 - 예약한 책>");
+                    bookDisplay("book");
                     break;
                 case 4:
-                    System.out.println("<2. 대출>");
-                    bookDisplay();
-                    bookLoaning(person.name);
+                    System.out.println("<4. 대출>");
+                    bookDisplay("all");
+                    bookLoaning();
                     break;
                 case 5:
-                    System.out.println("<3. 반납>");
-                    bookDisplay();
-                    bookReturning(person.name);
+                    System.out.println("<5. 반납>");
+                    bookDisplay("all");
+                    bookReturning();
                     break;
                 case 6:
-                    System.out.println("<4. 예약>");
-                    bookDisplay();
-                    bookBooking(person.name);
+                    System.out.println("<6. 예약>");
+                    bookDisplay("all");
+                    bookBooking();
                     break;
                 case 7:
+                    if (student!=null)
+                        student.대출한도연장();
+                    else
+                        faculty.대출한도연장();
+                    break;
+                case 8:
                     System.out.println("종료 하였습니다.");
                     break;
             }
-        }while (num!=5);
+        }while (num!=8);
 
     }
-    static void user_act_faculty(Faculty person){
 
-    }
-    static void student_act(Student person){
-        System.out.println(person.name+"("+person.who+")"+"님 반갑습니다");
-        user_act_student(person);
-    }
-    static void faculty_act(Faculty person){
-        System.out.println(person.name+"("+person.who+")"+"님 반갑습니다");
-        user_act_faculty(person);
-    }
-    static int personselect(){
+    private static int personselect(){
         int num = 0;
         String name,passwd,identity;
         input.nextLine();
@@ -137,18 +134,22 @@ public class NEWMAIN {
                 break;
             case "학생":
                 student= new Student(name,passwd);
-                student_act(student);
+                con.connStudent(student);
+                System.out.println(student.getName()+"("+student.getWho()+")"+"님 반갑습니다");
+                user_act_2();
                 num =3;
                 break;
             case "교직원":
                 faculty = new Faculty(name,passwd);
-                faculty_act(faculty);
+                con.connFaculty(faculty);
+                System.out.println(faculty.getName()+"("+faculty.getWho()+")"+"님 반갑습니다");
+                user_act_2();
                 num =3;
                 break;
         }
         return num;
     }
-    static void personinsert(){
+    private static void personinsert(){
         String name,passwd,identity;
         input.nextLine();
         do {
@@ -172,35 +173,25 @@ public class NEWMAIN {
 
         con.personinsert(name,passwd,identity);
     }
-    static void bookBooking(String username){
+    private static void bookBooking(){
         System.out.println("책 번호 :");
         int idx = input.nextInt();
-        con.book_booking(idx,username);
+        con.book_booking(idx);
     }
-    static void bookLoaning(String username){
+    private static void bookLoaning(){
         System.out.println("책 번호 :");
         int idx = input.nextInt();
-        con.book_loaning(idx,username);
+        con.book_loaning(idx);
     }
-    static void bookReturning(String username){
+    private static void bookReturning(){
         System.out.println("책 번호 :");
         int idx = input.nextInt();
-        con.book_return(idx,username);
+        con.book_return(idx);
     }
-
-
-
-
-
-
-
-
-
-
 
 
     /**admin */
-    static void admin_act(){
+    private static void admin_act(){
         int num;
 
         do {
@@ -216,26 +207,26 @@ public class NEWMAIN {
             switch (num){
                 case 1:
                     System.out.println("<1. 책 정보 출력>");
-                    bookDisplay();
+                    bookDisplay("all");
                     break;
                 case 2:
                     System.out.println("<2. 책 정보 입력>");
-                    bookDisplay();
+                    bookDisplay("all");
                     bookInsert();
                     break;
                 case 3:
                     System.out.println("<3. 책 정보 수정>");
-                    bookDisplay();
+                    bookDisplay("all");
                     bookUpdate();
                     break;
                 case 4:
                     System.out.println("<4. 책 정보 삭제>");
-                    bookDisplay();
+                    bookDisplay("all");
                     bookDelete();
                     break;
                 case 5:
                     System.out.println("<5. 책 정보 선택>");
-                    bookDisplay();
+                    bookDisplay("all");
                     bookSelect();
                     break;
                 case 6:
@@ -244,24 +235,24 @@ public class NEWMAIN {
             }
         }while (num!=6);
     }
-    static void bookDisplay(){
-        con.bookselectAll();
+    private static void bookDisplay(String str){
+        con.bookselectWhere(str);
     }
-    static void bookSelect(){
+    private static void bookSelect(){
         input.nextLine();
         int idx;
         System.out.print("책 번호 입력 : ");
         idx = input.nextInt();
         con.bookselect(idx);
     }
-    static void bookDelete(){
+    private static void bookDelete(){
         input.nextLine();
         int idx;
         System.out.print("책 번호 입력 : ");
         idx = input.nextInt();
         con.bookdelete(idx);
     }
-    static void bookInsert(){
+    private static void bookInsert(){
         input.nextLine();
         String name,author,loaner,booker;
         System.out.println("책 이름 입력 : ");
@@ -274,7 +265,7 @@ public class NEWMAIN {
         booker = input.nextLine();
         con.bookinsert(name,author,loaner,booker);
     }
-    static void bookUpdate(){
+    private static void bookUpdate(){
         input.nextLine();
         int idx;
         String name,author,loaner,booker;
