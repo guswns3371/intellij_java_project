@@ -54,17 +54,22 @@ public class NEWMAIN {
     private static void user_act_2(){
         int num;
         do {
+            System.out.println("0. 검색 - 이름/ 작가/ 번호");
             System.out.println("1. 조회 - 모든 책");
             System.out.println("2. 조회 - 대출한 책");
             System.out.println("3. 조회 - 예약한 책");
             System.out.println("4. 대출");
             System.out.println("5. 반납");
             System.out.println("6. 예약");
-            System.out.println("7. 대출한도연장");
-            System.out.println("8. 종료");
+            System.out.println("7. 대출 한도 연장");
+            System.out.println("8. 반납일 연장");
+            System.out.println("9. 종료");
             System.out.println("번호 입력 : ");
             num = input.nextInt();
             switch (num){
+                case 0:
+                    bookSearch();
+                    break;
                 case 1:
                     System.out.println("<1. 조회 - 모든 책>");
                     bookDisplay("all");
@@ -84,7 +89,7 @@ public class NEWMAIN {
                     break;
                 case 5:
                     System.out.println("<5. 반납>");
-                    bookDisplay("all");
+                    bookDisplay("loan");
                     bookReturning();
                     break;
                 case 6:
@@ -93,19 +98,20 @@ public class NEWMAIN {
                     bookBooking();
                     break;
                 case 7:
-                    if (student!=null)
-                        student.대출한도연장();
-                    else
-                        faculty.대출한도연장();
+                    사용자대출한도연장();
                     break;
                 case 8:
+                    사용자반납일연장();
+                    break;
+                case 9:
                     System.out.println("종료 하였습니다.");
                     break;
             }
-        }while (num!=8);
+        }while (num!=9);
 
     }
 
+    /**user*/
     private static int personselect(){
         int num = 0;
         String name,passwd,identity;
@@ -188,7 +194,31 @@ public class NEWMAIN {
         int idx = input.nextInt();
         con.book_return(idx);
     }
-
+    private static void 사용자대출한도연장(){
+        if (student!=null)
+            student.대출한도연장();
+        else
+            faculty.대출한도연장();
+    }
+    private static void 사용자반납일연장(){
+        if (student!=null){
+            if (student.반납일연장()){
+                ExtendingExp();
+            }
+        }
+        else{
+            if (faculty.반납일연장()){
+                ExtendingExp();
+            }
+        }
+    }
+    private static void ExtendingExp(){
+        input.nextLine();
+        bookDisplay("loan");
+        System.out.println("연장할 책 번호: ");
+        int idx = input.nextInt();
+        con.book_extending_exp(idx);
+    }
 
     /**admin */
     private static void admin_act(){
@@ -199,7 +229,7 @@ public class NEWMAIN {
             System.out.println("2. 책 정보 입력");
             System.out.println("3. 책 정보 수정");
             System.out.println("4. 책 정보 삭제");
-            System.out.println("5. 책 정보 선택");
+            System.out.println("5. 책 정보 검색");
             System.out.println("6. 종료");
             System.out.println("번호 입력 : ");
             num = input.nextInt();
@@ -211,23 +241,22 @@ public class NEWMAIN {
                     break;
                 case 2:
                     System.out.println("<2. 책 정보 입력>");
-                    bookDisplay("all");
+//                    bookDisplay("all");
                     bookInsert();
                     break;
                 case 3:
                     System.out.println("<3. 책 정보 수정>");
-                    bookDisplay("all");
+//                    bookDisplay("all");
                     bookUpdate();
                     break;
                 case 4:
                     System.out.println("<4. 책 정보 삭제>");
-                    bookDisplay("all");
+//                    bookDisplay("all");
                     bookDelete();
                     break;
                 case 5:
-                    System.out.println("<5. 책 정보 선택>");
-                    bookDisplay("all");
-                    bookSelect();
+                    System.out.println("<5. 책 정보 검색>");
+                    bookSearch();
                     break;
                 case 6:
                     System.out.println("종료 하였습니다.");
@@ -238,12 +267,32 @@ public class NEWMAIN {
     private static void bookDisplay(String str){
         con.bookselectWhere(str);
     }
-    private static void bookSelect(){
+    private static void bookSearch(){
         input.nextLine();
-        int idx;
-        System.out.print("책 번호 입력 : ");
-        idx = input.nextInt();
-        con.bookselect(idx);
+        int num;
+        System.out.println("1. 번호로 찾기");
+        System.out.println("2. 작가로 찾기");
+        System.out.println("3. 책 이름으로 찾기");
+        num = input.nextInt();
+        input.nextLine();
+        String str;
+        switch (num){
+            case 1:
+                System.out.print("책 번호 입력 : ");
+                str = input.nextLine();
+                con.booksearch("번호",str);
+                break;
+            case 2:
+                System.out.print("책 작가 입력 : ");
+                str = input.nextLine();
+                con.booksearch("작가",str);
+                break;
+            case 3:
+                System.out.print("책 이름 입력 : ");
+                str = input.nextLine();
+                con.booksearch("이름",str);
+                break;
+        }
     }
     private static void bookDelete(){
         input.nextLine();
