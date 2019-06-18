@@ -1,6 +1,9 @@
 package library;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MysqlConnect {
 
@@ -20,6 +23,12 @@ public class MysqlConnect {
     void connStudent(Student student){
         this.student = student;
         isStudent = true;
+
+        Date today = new java.sql.Date(new Date().getTime());
+        BookInfo book;
+        book = first_checking("loan");
+
+        book = first_checking("book");
     }
     void connFaculty(Faculty faculty){
         this.faculty = faculty;
@@ -366,6 +375,61 @@ public class MysqlConnect {
     }
 
     /** book -user */
+    private BookInfo first_checking(String str){
+        String username = null;
+        if (isStudent)
+            username = student.getName();
+        else if (isFaculty)
+            username = faculty.getName();
+
+        BookInfo book = null;
+        StringBuilder sb = new StringBuilder();
+        String sql = null;
+        switch (str){
+            case "loan":
+                sql = sb.append("select * from " + table_book + " where")
+                        .append(" loaner = ")
+                        .append("'"+username+"'")
+                        .append(";").toString();
+                break;
+            case "book":
+                sql = sb.append("select * from " + table_book + " where")
+                        .append(" booker = ")
+                        .append("'"+username+"'")
+                        .append(";").toString();
+                break;
+        }
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                String expire_day = (rs.getString("expire_day") == null? "<없음>" : rs.getString("expire_day"));
+                book = new BookInfo(
+                        rs.getString("idx"),
+                        rs.getString("name"),
+                        rs.getString("author"),
+                        rs.getString("loaner"),
+                        rs.getString("booker"),
+                        expire_day
+                );
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (!book.getExpire_day().equals("<없음>")){
+                    Date date1 = sdf.parse(book.getExpire_day());
+                    Date date2 = sdf.parse(sdf.format(new Date()));
+                    if (date1.before(date2)){
+
+                    }
+                }
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return book;
+    }
+
     private int user_checking(){
         int num = 0;
         String username = null;

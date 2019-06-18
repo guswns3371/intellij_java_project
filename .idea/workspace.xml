@@ -3,12 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="88870d01-db65-48c8-a456-b5bad4db6860" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/library/BookInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/library/BookInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/library/Faculty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/library/Faculty.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/library/MysqlConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/library/MysqlConnect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/library/NEWMAIN.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/library/NEWMAIN.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/library/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/library/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/library/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/library/User.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -66,14 +61,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/library/MysqlConnect.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="486" column="62" selection-start-line="486" selection-start-column="62" selection-end-line="486" selection-end-column="62" />
+            <state relative-caret-position="534">
+              <caret line="418" column="24" selection-start-line="418" selection-start-column="24" selection-end-line="418" selection-end-column="24" />
               <folding>
-                <element signature="method#connStudent#0;class#MysqlConnect#0" />
-                <element signature="method#connFaculty#0;class#MysqlConnect#0" />
+                <element signature="imports" expanded="true" />
                 <element signature="method#connect#0;class#MysqlConnect#0" />
                 <element signature="method#disconnect#0;class#MysqlConnect#0" />
                 <element signature="method#personinsert#0;class#MysqlConnect#0" />
@@ -86,6 +80,7 @@
                 <element signature="method#user_checking#0;class#MysqlConnect#0" />
                 <element signature="method#book_checking#0;class#MysqlConnect#0" />
                 <element signature="method#book_booking#0;class#MysqlConnect#0" />
+                <element signature="method#book_loaning#0;class#MysqlConnect#0" />
                 <element signature="method#book_return#0;class#MysqlConnect#0" />
                 <element signature="method#book_extending_exp#0;class#MysqlConnect#0" />
               </folding>
@@ -96,16 +91,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/library/NEWMAIN.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-876">
-              <caret line="72" column="23" lean-forward="true" selection-start-line="72" selection-start-column="23" selection-end-line="72" selection-end-column="23" />
+            <state relative-caret-position="294">
+              <caret line="53" column="36" selection-start-line="53" selection-start-column="36" selection-end-line="53" selection-end-column="36" />
               <folding>
+                <element signature="method#main#0;class#NEWMAIN#0" />
                 <element signature="method#user_act_1#0;class#NEWMAIN#0" />
+                <element signature="method#user_act_2#0;class#NEWMAIN#0" />
                 <element signature="method#personselect#0;class#NEWMAIN#0" />
                 <element signature="method#personinsert#0;class#NEWMAIN#0" />
                 <element signature="method#bookBooking#0;class#NEWMAIN#0" />
                 <element signature="method#bookLoaning#0;class#NEWMAIN#0" />
                 <element signature="method#bookReturning#0;class#NEWMAIN#0" />
                 <element signature="method#userLoaningExpanding#0;class#NEWMAIN#0" />
+                <element signature="method#userExpandingExpireday#0;class#NEWMAIN#0" />
+                <element signature="method#ExtendingExp#0;class#NEWMAIN#0" />
                 <element signature="method#admin_act#0;class#NEWMAIN#0" />
                 <element signature="method#bookSelect#0;class#NEWMAIN#0" />
                 <element signature="method#bookDelete#0;class#NEWMAIN#0" />
@@ -116,13 +115,31 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/library/Student.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="das://33fed5db-441f-45ff-9127-2e314bd3c2bf/schema/guswns_db/table/bookinfo">
           <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
             <state projectRestartId="f570f62b-8a0c-4c2a-9215-d34c3324b531">
               <filtering>
                 <filter text="" />
               </filtering>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/library/Faculty.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -175,8 +192,8 @@
         <option value="$PROJECT_DIR$/src/library/User.java" />
         <option value="$PROJECT_DIR$/src/library/Student.java" />
         <option value="$PROJECT_DIR$/src/library/Faculty.java" />
-        <option value="$PROJECT_DIR$/src/library/NEWMAIN.java" />
         <option value="$PROJECT_DIR$/src/library/BookInfo.java" />
+        <option value="$PROJECT_DIR$/src/library/NEWMAIN.java" />
         <option value="$PROJECT_DIR$/src/library/MysqlConnect.java" />
       </list>
     </option>
@@ -331,7 +348,7 @@
       <workItem from="1560749488388" duration="27496000" />
       <workItem from="1560789303762" duration="3185000" />
       <workItem from="1560838831005" duration="152000" />
-      <workItem from="1560839022917" duration="11422000" />
+      <workItem from="1560839022917" duration="14066000" />
     </task>
     <task id="LOCAL-00001" summary="JavaProject">
       <created>1559195206528</created>
@@ -389,24 +406,31 @@
       <option name="project" value="LOCAL" />
       <updated>1560844959943</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="JavaProject">
+      <created>1560850811160</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1560850811160</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84482000" />
+    <option name="totallyTimeSpent" value="87126000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="343" y="50" width="1284" height="840" extended-state="0" />
+    <frame x="274" y="42" width="1284" height="822" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Image Layers" order="0" />
       <window_info id="Designer" order="1" />
       <window_info id="UI Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
-      <window_info id="Structure" order="4" sideWeight="0.49222064" side_tool="true" visible="true" weight="0.13643791" />
+      <window_info id="Structure" order="4" sideWeight="0.49201742" side_tool="true" visible="true" weight="0.13643791" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.50777936" visible="true" weight="0.13643791" />
-      <window_info active="true" anchor="bottom" x="9" y="80" width="950" height="761" id="Run" order="0" sideWeight="0.4991119" type="WINDOWED" visible="true" weight="0.3903819" />
+      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.5079826" visible="true" weight="0.13643791" />
+      <window_info anchor="bottom" x="9" y="69" width="950" height="772" id="Run" order="0" sideWeight="0.4991119" type="WINDOWED" visible="true" weight="0.3903819" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32850942" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39912918" />
@@ -422,7 +446,7 @@
       <window_info anchor="bottom" id="Messages" order="13" weight="0.32673267" />
       <window_info anchor="bottom" id="CheckStyle" order="14" weight="0.32956153" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Database" order="1" visible="true" weight="0.16421568" />
+      <window_info active="true" anchor="right" id="Database" order="1" visible="true" weight="0.16421568" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="right" id="Palette" order="4" />
@@ -610,20 +634,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/library/Faculty.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/library/Student.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/library/User.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="294">
@@ -641,22 +651,6 @@
           <filtering>
             <filter text="" />
           </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/library/LibrarySystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1029">
-          <caret line="160" column="69" selection-start-line="160" selection-start-column="69" selection-end-line="160" selection-end-column="69" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#도서정보출력#0;class#LibrarySystem#0" />
-            <element signature="method#대출관리#0;class#LibrarySystem#0" />
-            <element signature="method#check#0;class#LibrarySystem#0" />
-            <element signature="method#searchFromBookFile#0;class#LibrarySystem#0" />
-            <element signature="method#writeBookInfo#0;class#LibrarySystem#0" />
-            <element signature="method#writeAtoB#0;class#LibrarySystem#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -716,18 +710,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/library/Student.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/library/NEWMAIN.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-876">
-          <caret line="72" column="23" lean-forward="true" selection-start-line="72" selection-start-column="23" selection-end-line="72" selection-end-column="23" />
+        <state relative-caret-position="294">
+          <caret line="53" column="36" selection-start-line="53" selection-start-column="36" selection-end-line="53" selection-end-column="36" />
           <folding>
+            <element signature="method#main#0;class#NEWMAIN#0" />
             <element signature="method#user_act_1#0;class#NEWMAIN#0" />
+            <element signature="method#user_act_2#0;class#NEWMAIN#0" />
             <element signature="method#personselect#0;class#NEWMAIN#0" />
             <element signature="method#personinsert#0;class#NEWMAIN#0" />
             <element signature="method#bookBooking#0;class#NEWMAIN#0" />
             <element signature="method#bookLoaning#0;class#NEWMAIN#0" />
             <element signature="method#bookReturning#0;class#NEWMAIN#0" />
             <element signature="method#userLoaningExpanding#0;class#NEWMAIN#0" />
+            <element signature="method#userExpandingExpireday#0;class#NEWMAIN#0" />
+            <element signature="method#ExtendingExp#0;class#NEWMAIN#0" />
             <element signature="method#admin_act#0;class#NEWMAIN#0" />
             <element signature="method#bookSelect#0;class#NEWMAIN#0" />
             <element signature="method#bookDelete#0;class#NEWMAIN#0" />
@@ -737,13 +742,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/library/LibrarySystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1029">
+          <caret line="160" column="69" selection-start-line="160" selection-start-column="69" selection-end-line="160" selection-end-column="69" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#도서정보출력#0;class#LibrarySystem#0" />
+            <element signature="method#대출관리#0;class#LibrarySystem#0" />
+            <element signature="method#check#0;class#LibrarySystem#0" />
+            <element signature="method#searchFromBookFile#0;class#LibrarySystem#0" />
+            <element signature="method#writeBookInfo#0;class#LibrarySystem#0" />
+            <element signature="method#writeAtoB#0;class#LibrarySystem#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/library/Faculty.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://33fed5db-441f-45ff-9127-2e314bd3c2bf/schema/guswns_db/table/bookinfo">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state projectRestartId="f570f62b-8a0c-4c2a-9215-d34c3324b531">
+          <filtering>
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/library/MysqlConnect.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="486" column="62" selection-start-line="486" selection-start-column="62" selection-end-line="486" selection-end-column="62" />
+        <state relative-caret-position="534">
+          <caret line="418" column="24" selection-start-line="418" selection-start-column="24" selection-end-line="418" selection-end-column="24" />
           <folding>
-            <element signature="method#connStudent#0;class#MysqlConnect#0" />
-            <element signature="method#connFaculty#0;class#MysqlConnect#0" />
+            <element signature="imports" expanded="true" />
             <element signature="method#connect#0;class#MysqlConnect#0" />
             <element signature="method#disconnect#0;class#MysqlConnect#0" />
             <element signature="method#personinsert#0;class#MysqlConnect#0" />
@@ -756,18 +792,10 @@
             <element signature="method#user_checking#0;class#MysqlConnect#0" />
             <element signature="method#book_checking#0;class#MysqlConnect#0" />
             <element signature="method#book_booking#0;class#MysqlConnect#0" />
+            <element signature="method#book_loaning#0;class#MysqlConnect#0" />
             <element signature="method#book_return#0;class#MysqlConnect#0" />
             <element signature="method#book_extending_exp#0;class#MysqlConnect#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://33fed5db-441f-45ff-9127-2e314bd3c2bf/schema/guswns_db/table/bookinfo">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state projectRestartId="f570f62b-8a0c-4c2a-9215-d34c3324b531">
-          <filtering>
-            <filter text="" />
-          </filtering>
         </state>
       </provider>
     </entry>
