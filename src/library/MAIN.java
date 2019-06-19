@@ -3,15 +3,15 @@ package library;
 import java.util.Scanner;
 
 
-public class NEWMAIN {
+public class MAIN {
 
     private static Scanner input  = null;
-    private static MysqlConnect con = null;
+    private static LibrarySystem sys = null;
     private static Student student=null;
     private static Faculty faculty=null;
     public static void main(String[] args) {
         input  = new Scanner(System.in);
-        con = new MysqlConnect();
+        sys = new LibrarySystem();
 
         System.out.print("사용자 ==> 1\n관리자 ==> 2\n종료 ==> 3 : ");
         int who = input.nextInt();
@@ -26,7 +26,7 @@ public class NEWMAIN {
                 System.out.println("종료 하였습니다.");
                 break;
         }
-        con.disconnect();
+        sys.disconnect();
         input.close();
     }
 
@@ -126,7 +126,7 @@ public class NEWMAIN {
             passwd = input.nextLine();
         }while (passwd.equals(""));
 
-        identity = con.personselect(name,passwd);
+        identity = sys.personselect(name,passwd);
 
         switch (identity){
             case "0":
@@ -140,14 +140,14 @@ public class NEWMAIN {
                 break;
             case "학생":
                 student= new Student(name,passwd);
-                con.connStudent(student);
+                sys.connStudent(student);
                 System.out.println(student.getName()+"("+student.getWho()+")"+"님 반갑습니다");
                 user_act_2();
                 num =3;
                 break;
             case "교직원":
                 faculty = new Faculty(name,passwd);
-                con.connFaculty(faculty);
+                sys.connFaculty(faculty);
                 System.out.println(faculty.getName()+"("+faculty.getWho()+")"+"님 반갑습니다");
                 user_act_2();
                 num =3;
@@ -177,22 +177,22 @@ public class NEWMAIN {
                 identity = "교직원";
         }while (identity.equals(""));
 
-        con.personinsert(name,passwd,identity);
+        sys.personinsert(name,passwd,identity);
     }
     private static void bookBooking(){
         System.out.println("책 번호 :");
         int idx = input.nextInt();
-        con.book_booking(idx);
+        sys.book_booking(idx);
     }
     private static void bookLoaning(){
         System.out.println("책 번호 :");
         int idx = input.nextInt();
-        con.book_loaning(idx);
+        sys.book_loaning(idx);
     }
     private static void bookReturning(){
         System.out.println("책 번호 :");
         int idx = input.nextInt();
-        con.book_return(idx);
+        sys.book_return(idx);
     }
     private static void 사용자대출한도연장(){
         if (student!=null)
@@ -217,7 +217,7 @@ public class NEWMAIN {
         bookDisplay("loan");
         System.out.println("연장할 책 번호: ");
         int idx = input.nextInt();
-        con.book_extending_exp(idx);
+        sys.book_extending_exp(idx);
     }
 
     /**admin */
@@ -241,17 +241,14 @@ public class NEWMAIN {
                     break;
                 case 2:
                     System.out.println("<2. 책 정보 입력>");
-//                    bookDisplay("all");
                     bookInsert();
                     break;
                 case 3:
                     System.out.println("<3. 책 정보 수정>");
-//                    bookDisplay("all");
                     bookUpdate();
                     break;
                 case 4:
                     System.out.println("<4. 책 정보 삭제>");
-//                    bookDisplay("all");
                     bookDelete();
                     break;
                 case 5:
@@ -265,7 +262,7 @@ public class NEWMAIN {
         }while (num!=6);
     }
     private static void bookDisplay(String str){
-        con.bookselectWhere(str);
+        sys.bookselectWhere(str);
     }
     private static void bookSearch(){
         input.nextLine();
@@ -280,17 +277,17 @@ public class NEWMAIN {
             case 1:
                 System.out.print("책 번호 입력 : ");
                 str = input.nextLine();
-                con.booksearch("번호",str);
+                sys.booksearch("번호",str);
                 break;
             case 2:
                 System.out.print("책 작가 입력 : ");
                 str = input.nextLine();
-                con.booksearch("작가",str);
+                sys.booksearch("작가",str);
                 break;
             case 3:
                 System.out.print("책 이름 입력 : ");
                 str = input.nextLine();
-                con.booksearch("이름",str);
+                sys.booksearch("이름",str);
                 break;
         }
     }
@@ -299,7 +296,7 @@ public class NEWMAIN {
         int idx;
         System.out.print("책 번호 입력 : ");
         idx = input.nextInt();
-        con.bookdelete(idx);
+        sys.bookdelete(idx);
     }
     private static void bookInsert(){
         input.nextLine();
@@ -312,7 +309,7 @@ public class NEWMAIN {
         loaner = input.nextLine();
         System.out.println("책 예약자 입력 : ");
         booker = input.nextLine();
-        con.bookinsert(name,author,loaner,booker);
+        sys.bookinsert(name,author,loaner,booker);
     }
     private static void bookUpdate(){
         input.nextLine();
@@ -329,7 +326,7 @@ public class NEWMAIN {
         loaner = input.nextLine();
         System.out.print("책 예약자 입력 (변경하지 않을 경우 ! 입력) : ");
         booker = input.nextLine();
-        con.bookupdate(idx,name,author,loaner,booker);
+        sys.bookupdate(idx,name,author,loaner,booker);
     }
 
 }
