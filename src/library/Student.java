@@ -4,7 +4,7 @@ public class Student extends User {
 
 
     private int expand_num = 0;
-    public Student(String name, String passwd) {
+     Student(String name, String passwd) {
         super(name, passwd);
         super.setWho("학생");
         super.Max_books = 3;

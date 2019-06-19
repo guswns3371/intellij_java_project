@@ -14,10 +14,6 @@ public class Person {
         System.out.println(name+" ("+who+") : "+said);
     }
 
-    void 나가기(){
-        intro("나가기");
-    }
-
     public String getName() {
         return name;
     }
@@ -33,4 +29,5 @@ public class Person {
     protected void setWho(String who) {
         this.who = who;
     }
+
 }

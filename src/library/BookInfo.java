@@ -16,47 +16,21 @@ public class BookInfo {
         return idx;
     }
 
-    public void setIdx(String idx) {
-        this.idx = idx;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
     public String getLoaner() {
         return loaner;
-    }
-
-    public void setLoaner(String loaner) {
-        this.loaner = loaner;
     }
 
     public String getBooker() {
         return booker;
     }
 
-    public void setBooker(String booker) {
-        this.booker = booker;
-    }
-
     public String getExpire_day() {
         return expire_day;
     }
 
-    public void setExpire_day(String expire_day) {
-        this.expire_day = expire_day;
-    }
 }
