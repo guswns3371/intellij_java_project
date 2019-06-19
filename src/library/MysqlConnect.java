@@ -1,9 +1,6 @@
 package library;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MysqlConnect {
 
@@ -24,15 +21,23 @@ public class MysqlConnect {
         this.student = student;
         isStudent = true;
 
-        Date today = new java.sql.Date(new Date().getTime());
-        BookInfo book;
-        book = first_checking("loan");
-
-        book = first_checking("book");
+        if (user_alertcheck()){
+            System.out.println("<******** 알림 ********>");
+            first_checking("loan");
+            first_checking("book");
+            System.out.println("<*********************>");
+        }
     }
     void connFaculty(Faculty faculty){
         this.faculty = faculty;
         isFaculty = true;
+
+        if (user_alertcheck()){
+            System.out.println("<******** 알림 ********>");
+            first_checking("loan");
+            first_checking("book");
+            System.out.println("<*********************>");
+        }
     }
 
     void connect(){
@@ -131,6 +136,24 @@ public class MysqlConnect {
         return identity;
     }
 
+     private String getUserName(){
+        String username = null;
+        if (isStudent){
+            username = student.getName();
+        }else if (isFaculty){
+            username = faculty.getName();
+        }
+        return  username;
+    }
+     private int getMaxBookNum(){
+         int max_book=0;
+         if (isStudent){
+             max_book = student.Max_books;
+         }else if (isFaculty){
+             max_book = faculty.Max_books;
+         }
+         return max_book;
+     }
 
     /** book -admin */
     // 삽입
@@ -214,11 +237,7 @@ public class MysqlConnect {
     }
     // 모든 검색
      void bookselectWhere(String str) {
-         String username = null;
-         if (isStudent)
-             username = student.getName();
-         else if (isFaculty)
-             username = faculty.getName();
+
 
         StringBuilder sb = new StringBuilder();
         String sql = null;
@@ -230,13 +249,13 @@ public class MysqlConnect {
             case "loan":
                 sql = sb.append("select * from " + table_book + " where")
                         .append(" loaner = ")
-                        .append("'"+username+"'")
+                        .append("'"+getUserName()+"'")
                         .append(";").toString();
                 break;
             case "book":
                 sql = sb.append("select * from " + table_book + " where")
                         .append(" booker = ")
-                        .append("'"+username+"'")
+                        .append("'"+getUserName()+"'")
                         .append(";").toString();
                 break;
         }
@@ -376,33 +395,33 @@ public class MysqlConnect {
 
     /** book -user */
     private BookInfo first_checking(String str){
-        String username = null;
-        if (isStudent)
-            username = student.getName();
-        else if (isFaculty)
-            username = faculty.getName();
 
         BookInfo book = null;
         StringBuilder sb = new StringBuilder();
         String sql = null;
         switch (str){
             case "loan":
-                sql = sb.append("select * from " + table_book + " where")
+                sql = sb.append("select *,datediff(expire_day,curdate())")
+                        .append(" from " + table_book + " where")
                         .append(" loaner = ")
-                        .append("'"+username+"'")
+                        .append("'"+getUserName()+"'")
                         .append(";").toString();
                 break;
             case "book":
-                sql = sb.append("select * from " + table_book + " where")
+                sql = sb.append("select *,datediff(expire_day,curdate())")
+                        .append(" from " + table_book + " where")
                         .append(" booker = ")
-                        .append("'"+username+"'")
+                        .append("'"+getUserName()+"'")
                         .append(";").toString();
                 break;
         }
         try {
             ResultSet rs = stmt.executeQuery(sql);
+            int penal_num=0;
+
             while (rs.next()){
                 String expire_day = (rs.getString("expire_day") == null? "<없음>" : rs.getString("expire_day"));
+                String left_days = (rs.getString("datediff(expire_day,curdate())")==null? "<없음>" : rs.getString("datediff(expire_day,curdate())") );
                 book = new BookInfo(
                         rs.getString("idx"),
                         rs.getString("name"),
@@ -411,42 +430,90 @@ public class MysqlConnect {
                         rs.getString("booker"),
                         expire_day
                 );
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                if (!book.getExpire_day().equals("<없음>")){
-                    Date date1 = sdf.parse(book.getExpire_day());
-                    Date date2 = sdf.parse(sdf.format(new Date()));
-                    if (date1.before(date2)){
+                switch (str){
+                    case "loan":
+                        if (!left_days.equals("<없음>")){
+                            int left = Integer.parseInt(left_days);
+                            if (left>=0){
+                                System.out.println(book.getIdx()+"번 '"+book.getName()
+                                        +"' 반납일 :"+book.getExpire_day()
+                                        +" => 반납까지 남은 일수 :"+left+"일");
+                            }else{
+                                System.out.println(book.getIdx()+"번 '"+book.getName()
+                                        +"' 반납일 :"+book.getExpire_day()
+                                        +" => 반납으로부터 초과 일수 :"+left+"일");
+                                penal_num++;
 
-                    }
+                            }
+
+                        }
+                        break;
+                    case "book":
+                        if (book.getLoaner().equals("")){
+                            System.out.println("예약한 "+book.getIdx()+"번 '"+book.getName()+"'의 대출자가 없습니다 => 대출을 확정하세요");
+                        }
+                        break;
                 }
-
             }
+            user_penalty(penal_num);
 
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         }
         return book;
     }
 
-    private int user_checking(){
-        int num = 0;
-        String username = null;
-        int max_book = 0;
-        if (isStudent){
-            username = student.getName();
-            max_book = student.Max_books;
-        }else if (isFaculty){
-            username = faculty.getName();
-            max_book = faculty.Max_books;
+        /**checking*/
+    private void user_penalty(int num){
+
+        StringBuilder sb = new StringBuilder();
+        String sql =  sb.append("update " + table_person + " set")
+                .append(" alert = alert + ")
+                .append(num)
+                .append(" where name = ")
+                .append("'" + getUserName() + "'")
+                .append(";").toString();
+        try {
+            stmt.executeUpdate(sql);
+            System.out.println("");
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    private boolean user_alertcheck(){
+        boolean isOk = false;
+        StringBuilder sb = new StringBuilder();
+        String sql = sb.append("select * from " + table_person + " where")
+                .append(" name = ")
+                .append("'"+getUserName()+"'")
+                .append(";").toString();
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                int alert_num = rs.getInt("alert");
+                if (alert_num>=3) {
+                    isOk = false;
+                    System.out.println("경고 3회 이상인 사용자는 책 대출, 예약이 불가능 합니다. 관리자에게 문의하세요");
+                }
+                else {
+                    isOk = true;
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
+        return isOk;
+    }
+    private int user_bookcount(){
+        int num = 0;
 
         StringBuilder sb = new StringBuilder();
         String sql = sb.append("select * from " + table_book + " where ")
                         .append(" loaner = ")
-                        .append("'"+username+"'")
+                        .append("'"+getUserName()+"'")
                         .toString();
         try {
             ResultSet rs = stmt.executeQuery(sql);
@@ -460,7 +527,6 @@ public class MysqlConnect {
         }
         return num;
     }
-
     private BookInfo book_checking(int idx){
         BookInfo book = null;
         StringBuilder sb = new StringBuilder();
@@ -488,22 +554,18 @@ public class MysqlConnect {
         }
         return book;
     }
+
     // 예약
     void book_booking(int idx){
-        String username = null;
-        if (isStudent)
-            username = student.getName();
-        else if (isFaculty)
-            username = faculty.getName();
+        if (user_alertcheck()){
+            String check = book_checking(idx).booker;
 
-        String check = book_checking(idx).booker;
-
-        if (check.equals("")){
-            if (!book_checking(idx).loaner.equals(username)){
+            if (check.equals("")){
+                if (!book_checking(idx).loaner.equals(getUserName())){
                     StringBuilder sb = new StringBuilder();
                     String sql =  sb.append("update " + table_book + " set")
                             .append(" booker = ")
-                            .append("'" + username + "'")
+                            .append("'" + getUserName() + "'")
                             .append(" where idx = ")
                             .append(idx)
                             .append(";").toString();
@@ -515,77 +577,65 @@ public class MysqlConnect {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
+                }else {
+                    System.out.println("대출한 책은 예약을 할 수 없습니다");
+                }
             }else {
-                System.out.println("대출한 책은 예약을 할 수 없습니다");
+                if (check.equals(getUserName()))
+                    System.out.println("이미 예약한 책입니다.");
+                else
+                    System.out.println("예약 불가 (예약자 : "+check+")");
             }
-        }else {
-            if (check.equals(username))
-                System.out.println("이미 예약한 책입니다.");
-            else
-                System.out.println("예약 불가 (예약자 : "+check+")");
         }
+
 
     }
     // 대출
     void book_loaning(int idx){
-        String username = null;
-        int max_book = 0;
-        if (isStudent){
-            username = student.getName();
-            max_book = student.Max_books;
-        }else if (isFaculty){
-            username = faculty.getName();
-            max_book = faculty.Max_books;
-        }
-
-
-        if (book_checking(idx)!=null){
-            String check = book_checking(idx).loaner;
-            if (check.equals("")){
-                if (max_book > user_checking()){
-                    StringBuilder sb = new StringBuilder();
-                    String sql =  sb.append("update " + table_book + " set")
-                            .append(" loaner = ")
-                            .append("'" + username + "'")
-                            .append(" , ")
-                            .append(" expire_day =  DATE_ADD( CURDATE(),INTERVAL 10 DAY) ")
-                            .append(" where idx = ")
-                            .append(idx)
-                            .append(";").toString();
-                    try {
-                        stmt.executeUpdate(sql);
-                    } catch (SQLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+        if (user_alertcheck()){
+            if (book_checking(idx)!=null){
+                String check = book_checking(idx).loaner;
+                if (check.equals("")){
+                    if (getMaxBookNum() > user_bookcount()){
+                        StringBuilder sb = new StringBuilder();
+                        String sql =  sb.append("update " + table_book + " set")
+                                .append(" loaner = ")
+                                .append("'" + getUserName() + "'")
+                                .append(" , ")
+                                .append(" expire_day =  DATE_ADD( CURDATE(),INTERVAL 10 DAY) ")
+                                .append(" where idx = ")
+                                .append(idx)
+                                .append(";").toString();
+                        try {
+                            stmt.executeUpdate(sql);
+                        } catch (SQLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }else {
+                        System.out.println("현재 대출중인 책이 <"+ user_bookcount()+" / "+getMaxBookNum()+">권이므로 대출 불가능합니다.");
                     }
+
+
                 }else {
-                    System.out.println("현재 대출중인 책이 <"+user_checking()+" / "+max_book+">권이므로 대출 불가능합니다.");
+                    if (check.equals(getUserName()))
+                        System.out.println("이미 대출한 책입니다.");
+                    else
+                        System.out.println("대출 불가 (대출자 : "+check+")");
                 }
-
-
             }else {
-                if (check.equals(username))
-                    System.out.println("이미 대출한 책입니다.");
-                else
-                    System.out.println("대출 불가 (대출자 : "+check+")");
+                System.out.println("존재하지 않는 책 번호 입니다.");
             }
-        }else {
-            System.out.println("존재하지 않는 책 번호 입니다.");
         }
+
 
 
     }
     // 반납
     void book_return(int idx){
-        String username = null;
-        if (isStudent)
-            username = student.getName();
-        else if (isFaculty)
-            username = faculty.getName();
-
         String check = book_checking(idx).loaner;
         if (!check.equals("")){
-            if (check.equals(username)){
+            if (check.equals(getUserName())){
                 StringBuilder sb = new StringBuilder();
                 String sql =  sb.append("update " + table_book + " set")
                         .append(" loaner = ")
@@ -602,31 +652,25 @@ public class MysqlConnect {
                     e.printStackTrace();
                 }
             }else {
-                System.out.println(username+"님께서 대출한 책이 아닙니다.");
+                System.out.println(getUserName()+"님께서 대출한 책이 아닙니다.");
             }
         }else {
-            System.out.println(username+"님께서 대출한 책이 아닙니다.");
+            System.out.println(getUserName()+"님께서 대출한 책이 아닙니다.");
         }
     }
     // 반납일 연장
     void book_extending_exp(int idx){
-        String username = null;
-        if (isStudent)
-            username = student.getName();
-        else if (isFaculty)
-            username = faculty.getName();
-
-
         StringBuilder sb = new StringBuilder();
         String sql =  sb.append("update " + table_book + " set ")
                         .append("expire_day = DATE_ADD( expire_day, INTERVAL 7 DAY) where ")
                         .append(" loaner = ")
-                        .append("'"+username+"' and ")
+                        .append("'"+getUserName()+"' and ")
                         .append(" idx = ")
                         .append(idx)
                         .append(";").toString();
         try {
             stmt.executeUpdate(sql);
+            System.out.println("반납일 7일 연장되었습니다.");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
