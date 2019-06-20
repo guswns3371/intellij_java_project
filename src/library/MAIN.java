@@ -245,10 +245,12 @@ public class MAIN {
                     break;
                 case 3:
                     System.out.println("<3. 책 정보 수정>");
+                    bookDisplay("all");
                     bookUpdate();
                     break;
                 case 4:
                     System.out.println("<4. 책 정보 삭제>");
+                    bookDisplay("all");
                     bookDelete();
                     break;
                 case 5:

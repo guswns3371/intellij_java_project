@@ -475,7 +475,7 @@ public class LibrarySystem {
                 .append(";").toString();
         try {
             stmt.executeUpdate(sql);
-            System.out.println("");
+            System.out.println("경고 점수 +1 되었습니다. +3점이 될 경우 책 대출,예약이 불가합니다.");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
